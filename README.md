@@ -111,5 +111,5 @@ This thesis presents a **data-centric FL methodology** to optimize training whil
 2. Daniel J. Beutel et al. *Flower: A friendly federated learning research framework*, 2020.
 3. Lukas Budach et al. *The effects of data quality on machine learning performance*, 2022.
 4. Michaela Iorga et al. *The NIST definition of Fog Computing*, 2017.
-[^5] 5. Roy Schwartz et al. *Green AI*, 2020.
+[^5]: Roy Schwartz et al. *Green AI*, 2020.
 6. Chen Zhang et al. *A survey on federated learning*, 2021.
