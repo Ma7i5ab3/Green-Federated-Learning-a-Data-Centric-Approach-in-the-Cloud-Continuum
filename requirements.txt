@@ -3,6 +3,9 @@ matplotlib
 seaborn
 scikit-learn
 flwr[simulation]
-tensorflow
+tensorflow-macos
+tensorflow-metal
 codecarbon
 imblearn
+streamlit
+xgboost
