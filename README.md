@@ -7,10 +7,6 @@ This repository proposes a Data-Centric approach to Energy-Efficient Federated L
 
 The Eco Friendly Federated Learning Platform has been developed to support the research study 👉🏽 [Read Paper](https://www.politesi.polimi.it/retrieve/db221856-83e5-4aac-a2bf-99cb652d6195/Green_Federated_Learning__a_Data_Centric_Approach_in_the_Cloud_Continuum_Extended_Summary.pdf)
 
-<style>
-img { width: 300px; height: 300px}
-</style>
-
 ![Federated Learning Configuration Selection System Architecture](utils/images/architecture.png)
 
 ## ⭐️ Features
