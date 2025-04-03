@@ -1,4 +1,4 @@
-import numpy as np
+import os
 import tensorflow as tf
 from flwr.common import ndarrays_to_parameters
 from flwr.common import (
@@ -6,7 +6,7 @@ from flwr.common import (
 )
 from flwr.client import ClientApp
 from flwr.simulation import run_simulation
-from flwr.server import ServerApp, ServerConfig, ServerAppComponents
+from flwr.server import ServerApp, ServerConfig, ServerAppComponents    
 from flwr.simulation import run_simulation
 from flwr.common import Context
 
@@ -104,7 +104,7 @@ def run_fl_simulation(
     )
 
     # Run simulation
-    backend_config = {"client_resources": {"num_cpus": 14}}
+    backend_config = {"client_resources": {"num_cpus": os.cpu_count()}}
     run_simulation(
         server_app=server,
         client_app=client,

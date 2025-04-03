@@ -7,6 +7,7 @@ from utils.utils import (
 from data_processing.load_dataset import load_dataset, splitting_dataset
 from frontend.data_visualization import data_visualization
 from pipelines.rec_pipeline import run_fl_recommender
+from pipelines.fl_pipeline import run_fl_simulation
 
 
 def initialize_session_state():
@@ -37,11 +38,9 @@ def configure_dataset():
     st.write("#### Configure Dataset")
     train_dataset_path = st.text_input(
         "Insert Train Set Path",
-        "Datasets/Datasets_Training/StarLightsCurves/StarLightCurves_TRAIN.txt",
     )
     test_dataset_path = st.text_input(
         "Insert Test Set Path",
-        "Datasets/Datasets_Training/StarLightsCurves/StarLightCurves_TEST.txt",
     )
     clients = st.number_input(
         "Select number of clients of federated configuration:", 1, 100
@@ -68,10 +67,10 @@ def render_client_configuration():
         st.divider()
         st.write("**Insert Data Node Characteristics:**")
         data_params = {
-            'volume': st.slider("⦿ Data Volume", 0.00, 1.00),
-            'accuracy': st.slider("⦿ Data Accuracy", 0.00, 1.00),
-            'consistency': st.slider("⦿ Data Consistency", 0.00, 1.00),
-            'completeness': st.slider("⦿ Data Completeness", 0.00, 1.00)
+            'volume': st.slider("Data Volume", 0.00, 1.00),
+            'accuracy': st.slider("Data Accuracy", 0.00, 1.00),
+            'consistency': st.slider("Data Consistency", 0.00, 1.00),
+            'completeness': st.slider("Data Completeness", 0.00, 1.00)
         }
 
     with col3:
@@ -79,7 +78,7 @@ def render_client_configuration():
         energy_params = {
             'consumption': st.slider("Energy Consumption (kWh)", 0.00, 1000.00),
             'location': st.text_input("Location:"),
-            'carbon_intensity': st.slider("Carbon Intensity (gCO2eq/kWh)", 0.00, 100000.00)
+            'carbon_intensity': st.slider("Carbon Intensity (gCO2eq/kWh)", 0.00, 10000.00)
         }
         st.divider()
 
@@ -175,33 +174,33 @@ def option_selection():
         ],
     )
 
-    if option_labels[option_selection] == 'rec':
-        st.divider()
+    st.divider()
 
+    if option_labels[option_selection] == "rec":
         strategy_selection = st.radio(
             "## Choose the **Recommender Methodology** you would like to apply:",
             list(strategy_labels.keys()),
         )
-
         st.session_state.accuracy_goal = st.slider("Accuracy Goal:", 0.00, 1.00)
-        st.session_state.n_rounds = st.number_input("Insert the Number of Rounds:", 1, 100)
-        st.session_state.dir_path = st.text_input("Insert Directory Path to Save Results:")
 
-        continue_button = st.button("**Continue**", use_container_width=True)
-        if continue_button:
+    st.session_state.n_rounds = st.number_input("Insert the Number of Rounds:", 1, 100)
+    st.session_state.dir_path = st.text_input("Insert Directory Path to Save Results:")
+
+    continue_button = st.button("**Continue**", use_container_width=True)
+    if continue_button:
+        st.session_state.option_selection_status = False
+        if option_labels[option_selection] == "full":
+            st.session_state.full_mode_status = True
+        
+        if option_labels[option_selection] == "rec":
             st.session_state.rec_method = strategy_labels[strategy_selection]
-            st.session_state.option_selection_status = False
-            if option_labels[option_selection] == "full":
-                st.session_state.full_mode_status = True
-                st.rerun()
-            
-            if option_labels[option_selection] == "rec":
-                st.session_state.option_selection_status = False
-                st.session_state.rec_mode_status = True
-                st.rerun()
+            st.session_state.rec_mode_status = True
+
+        st.rerun()
+
 
 def rec_pipeline():
-    with st.spinner("Simulation is running. Check out the logs on terminal!"):
+    with st.spinner("Simulation is running. Check out the logs on terminal!", show_time=True):
         node_options_lst = build_node_options(
             data_volume_lst=st.session_state.data_volume_lst,
             data_accuracy_lst=st.session_state.data_accuracy_lst,
@@ -225,6 +224,34 @@ def rec_pipeline():
         st.session_state.rec_mode_status = False
         st.session_state.sim_end = True
 
+def full_resource_pipeline():
+    with st.spinner("Simulation is running. Check out the logs on terminal!", show_time=True):
+        node_options_lst = build_node_options(
+                data_volume_lst=st.session_state.data_volume_lst,
+                data_accuracy_lst=st.session_state.data_accuracy_lst,
+                data_consistency_lst=st.session_state.data_consistency_lst,
+                data_completeness_lst=st.session_state.data_completeness_lst,
+                num_clients=st.session_state.number_clients,
+                recommender_params=st.session_state.rec_params,
+                recommender=True
+            )
+        
+        results_dct = run_fl_simulation(
+            data=st.session_state.data,
+            node_options_lst=node_options_lst,
+            node_selection='fixed',
+            fraction_fit=1.0,
+            number_clients=st.session_state.number_clients,
+            rounds=st.session_state.n_rounds,
+            file_path=st.session_state.dir_path+'full_resource_sim.json'
+        )
+        
+        st.json(results_dct)
+        st.session_state.full_mode_status = False
+        st.session_state.sim_end = True
+        
+
+
 # -------------------------------------------------
 # Main --- Streamlit needs global scope executables
 st.title("🔮 Federated Learning Recommender")
@@ -243,7 +270,7 @@ elif st.session_state.load_partition_status:
 elif st.session_state.option_selection_status:
     option_selection()
 elif st.session_state.full_mode_status:
-    st.success("Full mode On!")
+    full_resource_pipeline()
 elif st.session_state.rec_mode_status:
     rec_pipeline()
 else:
