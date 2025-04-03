@@ -3,11 +3,12 @@
 ---
 
 ## 📚 Description 
-This repository proposes a Data-Centric approach to Energy-Efficient Federated Learning, addressing the environmental footprint of Federated Learning while maintaining Machine Learning performances. It borns to investigate the role of data quality measures at each network node and develop a methodology to optimize data selection in the Federated Learning training process, aiming to reduce the energy consumption and carbon emissions of AI training in a Federated environment.
+This repository proposes a _Data-Centric_ approach to _Energy-Efficient_ **Federated Learning**, addressing the environmental footprint of Federated Learning while maintaining Machine Learning performances. 
+
+It borns to investigate the role of **Data Quality** measures at each network node and develop a methodology to optimize **Data Selection** in the Federated Learning training process, aiming to reduce the energy consumption and carbon emissions of AI training in a Federated environment.
 
 The Eco Friendly Federated Learning Platform has been developed to support the research study 👉🏽 [Read Paper](https://www.politesi.polimi.it/retrieve/db221856-83e5-4aac-a2bf-99cb652d6195/Green_Federated_Learning__a_Data_Centric_Approach_in_the_Cloud_Continuum_Extended_Summary.pdf)
 
-![Federated Learning Configuration Selection System Architecture](utils/images/architecture.png)
 
 ## ⭐️ Features
 Experiment and run Federated Learning Simulations, powered by [Flower.ai](https://flower.ai), on your local machine with your own datasets for Time Series Classification tasks
